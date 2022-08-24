@@ -10,7 +10,6 @@ const licenseArray = [
     "BSD 2-clause \"Simplified\" license",
     "BSD 3-clause \"New\" or \"Revised\" license",
     "BSD 3-clause Clear license",
-    "Creative Commons license family",
     "Creative Commons Zero v1.0 Universal",
     "Creative Commons Attribution 4.0",
     "Creative Commons Attribution Share Alike 4.0",
@@ -20,7 +19,6 @@ const licenseArray = [
     "Eclipse Public License 2.0",
     "European Union Public License 1.1",
     "GNU Affero General Public License v3.0",
-    "GNU General Public License Family",
     "GNU General Public License v2.0",
     "GNU General Public License v3.0",
     "GNU Lesser General Public License v2.1",
@@ -36,6 +34,39 @@ const licenseArray = [
     "University of Illinois/NCSA Open Source License",
     "The Unlicense",
     "zLib License"
+];
+const licenseInfo = [
+    "https://opensource.org/licenses/AFL-3.0",
+    "https://www.apache.org/licenses/LICENSE-2.0",
+    "https://opensource.org/licenses/Artistic-2.0",
+    "https://www.boost.org/LICENSE_1_0.txt",
+    "https://opensource.org/licenses/BSD-2-Clause",
+    "https://choosealicense.com/licenses/bsd-3-clause/",
+    "https://spdx.org/licenses/BSD-3-Clause-Clear.html",
+    "https://choosealicense.com/licenses/cc0-1.0/",
+    "https://creativecommons.org/licenses/by/4.0/",
+    "https://creativecommons.org/licenses/by-sa/4.0/",
+    "http://www.wtfpl.net/about/",
+    "https://opensource.org/licenses/ECL-2.0",
+    "https://www.eclipse.org/legal/epl-v10.html",
+    "https://www.eclipse.org/legal/epl-2.0/",
+    "https://choosealicense.com/licenses/eupl-1.1/",
+    "https://www.gnu.org/licenses/agpl-3.0.en.html",
+    "https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html",
+    "https://www.gnu.org/licenses/gpl-3.0.en.html",
+    "https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html",
+    "https://www.gnu.org/licenses/lgpl-3.0.en.html",
+    "https://www.isc.org/licenses/",
+    "https://spdx.org/licenses/LPPL-1.3c.html",
+    "https://opensource.org/licenses/MS-PL",
+    "https://opensource.org/licenses/MIT",
+    "https://www.mozilla.org/en-US/MPL/2.0/",
+    "https://opensource.org/licenses/OSL-3.0",
+    "https://opensource.org/licenses/PostgreSQL",
+    "https://opensource.org/licenses/OFL-1.1",
+    "https://opensource.org/licenses/NCSA",
+    "https://unlicense.org/",
+    "https://www.zlib.net/zlib_license.html"
 ];
 
 // Add badge: https://img.shields.io/badge/<LABEL>-<MESSAGE>-<COLOR> i.e.
@@ -93,7 +124,17 @@ inquirer
     
     ])
     .then((response) => {
-        fs.appendFile('Generated_README.md', 
+        // If file already exists, delete it.
+        if (fs.existsSync('./Generated_README.md')) {
+            try {
+                fs.unlinkSync('./Generated_README.md')
+                console.log('Deleted old file')
+            } catch(err) {
+                console.error(err);
+                process.exit(1)
+            }
+        }
+        fs.appendFile('./Generated_README.md', 
         
 `# Ultimate-README-Generator
 [![License](https://img.shields.io/badge/license-${response.licenseChoice.replace(/\s/g,'%20')}-blue)](./LICENSE)
@@ -122,42 +163,12 @@ ${response.projectContributing}
 This project is managed by ${response.username}
 You can find me on GitHub at https://github.com/${response.username}
 Additional questions? You can email me at ${response.userEmail}
-### License`,
+### License
+This software is available under the ${response.licenseChoice}. You can find more info about this particular license at ${ licenseInfo[ licenseArray.indexOf(response.licenseChoice) ] }`,
 
         function (err) {
             if (err) throw err;
-            console.log('Saved!');
+            console.log('Saved! Filename is Generated_README.md');
         })
     }
 );
-
-
-
-//module.exports = generatedHTML
-// Your application should prompt the user for information like their name, location, bio, LinkedIn URL, and GitHub URL. Feel free to add any additional prompts you think of.
-/*
-# Ultimate-README-Generator
-[![License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
-#### Table of Contents
-- [Ultimate-README-Generator](#ultimate-readme-generator)
-      - [Table of Contents:](#table-of-contents-)
-  * [Description](#description)
-  * [Installation Instructions](#installation-instructions)
-  * [Usage](#usage)
-  * [Guidelines for Testing](#guidelines-for-testing)
-  * [Guidlines for Contributing](#guidlines-for-contributing)
-  * [License](#license)
-
-
-## Description
-
-## Installation Instructions
-
-## Usage
-
-## Guidelines for Testing
-
-## Guidlines for Contributing
-
-### License
-*/
