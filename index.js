@@ -1,7 +1,15 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-// Simply a list of a bunch of licenses you can automatically apply to your repo
+// Terminal control
+const RST =  () => console.log('\033[0m'); // Reset text colors to default
+// ---------------------------------  Colors  ----------------------------------- //
+// Foreground
+const FRED = () => console.log('\x1B[31m');
+const FGRN = () => console.log('\033[32m');
+const FCYN = () => console.log('\033[36m');
+
+// Simply a list of a bunch of licenses you can automatically apply to your repo.
 const licenseArray = [
     "Academic Free License v3.0",
     "Apache License 2.0",
@@ -35,6 +43,7 @@ const licenseArray = [
     "The Unlicense",
     "zLib License"
 ];
+// This list of links directly corresponds to the previous list. When a user adds a license, one of these links, which lead to that license, will be added to the readme.
 const licenseInfo = [
     "https://opensource.org/licenses/AFL-3.0",
     "https://www.apache.org/licenses/LICENSE-2.0",
@@ -68,9 +77,6 @@ const licenseInfo = [
     "https://unlicense.org/",
     "https://www.zlib.net/zlib_license.html"
 ];
-
-// Add badge: https://img.shields.io/badge/<LABEL>-<MESSAGE>-<COLOR> i.e.
-// https://img.shields.io/badge/license-zLib License-blue
 
 inquirer
   .prompt([
@@ -106,7 +112,7 @@ inquirer
     },
     {
       type: "list",
-      message: "What license is your project available under?",
+      message: "What license is your project available under? (A link to this license will be added to your README)",
       choices: licenseArray,
       default: "Academic Free License v3.0",
       name: "licenseChoice",
@@ -124,14 +130,16 @@ inquirer
     
     ])
     .then((response) => {
+      FCYN();
+      console.log('Processing. . .');
         // If file already exists, delete it.
         if (fs.existsSync('./Generated_README.md')) {
+            FRED();
             try {
                 fs.unlinkSync('./Generated_README.md')
-                console.log('Deleted old file')
+                console.log('Deleted old README file')
             } catch(err) {
                 console.error(err);
-                process.exit(1)
             }
         }
         fs.appendFile('./Generated_README.md', 
@@ -168,7 +176,10 @@ This software is available under the ${response.licenseChoice}. You can find mor
 
         function (err) {
             if (err) throw err;
-            console.log('Saved! Filename is Generated_README.md');
+            FGRN();
+            console.log(`Saved! Path is ${__dirname}\\Generated_README.md`);
+            require('child_process').exec(`start "" "${__dirname}"`);
+            RST();
         })
     }
 );
