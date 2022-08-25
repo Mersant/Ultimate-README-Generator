@@ -3,6 +3,7 @@ const fs = require('fs');
 
 // Terminal control
 const RST =  () => console.log('\033[0m'); // Reset text colors to default
+const CLS = () => console.log('\033c'); // Clears terminal and resets cursor position to (0,0)
 // ---------------------------------  Colors  ----------------------------------- //
 // Foreground
 const FRED = () => console.log('\x1B[31m');
@@ -78,6 +79,7 @@ const licenseInfo = [
     "https://www.zlib.net/zlib_license.html"
 ];
 
+CLS();
 inquirer
   .prompt([
     {
@@ -133,16 +135,16 @@ inquirer
       FCYN();
       console.log('Processing. . .');
         // If file already exists, delete it.
-        if (fs.existsSync('./Generated_README.md')) {
+        if (fs.existsSync(`${__dirname}\\Generated_README.md`)) {
             FRED();
             try {
-                fs.unlinkSync('./Generated_README.md')
+                fs.unlinkSync(`${__dirname}\\Generated_README.md`)
                 console.log('Deleted old README file')
             } catch(err) {
                 console.error(err);
             }
         }
-        fs.appendFile('./Generated_README.md', 
+        fs.appendFile(`${__dirname}\\Generated_README.md`, 
         
 `# Ultimate-README-Generator
 [![License](https://img.shields.io/badge/license-${response.licenseChoice.replace(/\s/g,'%20')}-blue)](./LICENSE)
